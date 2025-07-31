@@ -123,7 +123,7 @@ function comparar(tipo1, tipo2) {
     const valor2 = tipo2 ? Number(efectividades[tipoAtaque][tipo2]) : 0;
 
     // Si alguno es menor que 5, es inmune
-    if (valor1 < 5 || valor2 < 5) {
+    if (valor1 < -5 || valor2 < -5) {
       resultado.inmune.push(tipoAtaque);
       return;
     }
