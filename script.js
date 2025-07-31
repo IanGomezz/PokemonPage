@@ -20,12 +20,12 @@ const pokemonAcutal = {
 };
 const efectividades = {
   acero: { // Cómo le afectan los ataques al tipo ACERO
-    normal: "0", fuego: "-1", agua: "-1", planta: "0", electrico: "-1", hielo: "+1", lucha: "0", veneno: "-3",
+    normal: "0", fuego: "-1", agua: "-1", planta: "0", electrico: "-1", hielo: "+1", lucha: "0", veneno: "0",
     tierra: "0", volador: "0", psiquico: "0", bicho: "0", roca: "+1", fantasma: "0", dragon: "0", siniestro: "0", acero: "-1", hada: "+1"
   },
   volador: { // Cómo le afectan los ataques al tipo VOLADOR
     normal: "0", fuego: "0", agua: "0", planta: "+1", electrico: "-1", hielo: "0", lucha: "+1", veneno: "0",
-    tierra: "-3", volador: "0", psiquico: "0", bicho: "+1", roca: "-1", fantasma: "0", dragon: "0", siniestro: "0", acero: "-1", hada: "0"
+    tierra: "0", volador: "0", psiquico: "0", bicho: "+1", roca: "-1", fantasma: "0", dragon: "0", siniestro: "0", acero: "-1", hada: "0"
   },
   agua: { // Cómo le afectan los ataques al tipo AGUA
     normal: "0", fuego: "+1", agua: "-1", planta: "-1", electrico: "0", hielo: "0", lucha: "0", veneno: "0",
@@ -45,11 +45,11 @@ const efectividades = {
   },
   electrico: { // Cómo le afectan los ataques al tipo ELÉCTRICO
     normal: "0", fuego: "0", agua: "+1", planta: "-1", electrico: "-1", hielo: "0", lucha: "0", veneno: "0",
-    tierra: "0", volador: "+1", psiquico: "0", bicho: "0", roca: "0", fantasma: "0", dragon: "-1", siniestro: "0", acero: "0", hada: "0"
+    tierra: "-10", volador: "+1", psiquico: "0", bicho: "0", roca: "0", fantasma: "0", dragon: "-1", siniestro: "0", acero: "0", hada: "0"
   },
   normal: { // Cómo le afectan los ataques al tipo NORMAL
     normal: "0", fuego: "0", agua: "0", planta: "0", electrico: "0", hielo: "0", lucha: "0", veneno: "0",
-    tierra: "0", volador: "0", psiquico: "0", bicho: "0", roca: "-1", fantasma: "-3", dragon: "0", siniestro: "0", acero: "-1", hada: "0"
+    tierra: "0", volador: "0", psiquico: "0", bicho: "0", roca: "-1", fantasma: "-10", dragon: "0", siniestro: "0", acero: "-1", hada: "0"
   },
   roca: { // Cómo le afectan los ataques al tipo ROCA
     normal: "0", fuego: "+1", agua: "0", planta: "0", electrico: "0", hielo: "+1", lucha: "-1", veneno: "0",
@@ -57,7 +57,7 @@ const efectividades = {
   },
   tierra: { // Cómo le afectan los ataques al tipo TIERRA
     normal: "0", fuego: "+1", agua: "0", planta: "-1", electrico: "+1", hielo: "0", lucha: "0", veneno: "+1",
-    tierra: "0", volador: "0", psiquico: "0", bicho: "-1", roca: "+1", fantasma: "0", dragon: "0", siniestro: "0", acero: "+1", hada: "0"
+    tierra: "0", volador: "-10", psiquico: "0", bicho: "-1", roca: "+1", fantasma: "0", dragon: "0", siniestro: "0", acero: "+1", hada: "0"
   },
   fuego: { // Cómo le afectan los ataques al tipo FUEGO
     normal: "0", fuego: "-1", agua: "-1", planta: "+1", electrico: "0", hielo: "+1", lucha: "0", veneno: "0",
@@ -65,7 +65,7 @@ const efectividades = {
   },
   lucha: { // Cómo le afectan los ataques al tipo LUCHA
     normal: "+1", fuego: "0", agua: "0", planta: "0", electrico: "0", hielo: "+1", lucha: "0", veneno: "-1",
-    tierra: "0", volador: "-1", psiquico: "-1", bicho: "-1", roca: "+1", fantasma: "0", dragon: "0", siniestro: "+1", acero: "+1", hada: "-1"
+    tierra: "0", volador: "-1", psiquico: "-1", bicho: "-1", roca: "+1", fantasma: "-10", dragon: "0", siniestro: "+1", acero: "+1", hada: "-1"
   },
   hada: { // Cómo le afectan los ataques al tipo HADA
     normal: "0", fuego: "-1", agua: "0", planta: "0", electrico: "0", hielo: "0", lucha: "+1", veneno: "-1",
@@ -73,18 +73,18 @@ const efectividades = {
   },
   psiquico: { // Cómo le afectan los ataques al tipo PSIQUICO
     normal: "0", fuego: "0", agua: "0", planta: "0", electrico: "0", hielo: "0", lucha: "+1", veneno: "+1",
-    tierra: "0", volador: "0", psiquico: "-1", bicho: "0", roca: "0", fantasma: "0", dragon: "0", siniestro: "0", acero: "-1", hada: "0"
+    tierra: "0", volador: "0", psiquico: "-1", bicho: "0", roca: "0", fantasma: "0", dragon: "0", siniestro: "-10", acero: "-1", hada: "0"
   },
   veneno: { // Cómo le afectan los ataques al tipo VENENO
     normal: "0", fuego: "0", agua: "0", planta: "0", electrico: "0", hielo: "0", lucha: "0", veneno: "-1",
-    tierra: "-1", volador: "0", psiquico: "0", bicho: "0", roca: "-1", fantasma: "-1", dragon: "0", siniestro: "0", acero: "0", hada: "+1"
+    tierra: "-1", volador: "0", psiquico: "0", bicho: "0", roca: "-1", fantasma: "-1", dragon: "0", siniestro: "0", acero: "-10", hada: "+1"
   },
   dragon: { // Cómo le afectan los ataques al tipo DRAGÓN
     normal: "0", fuego: "0", agua: "0", planta: "0", electrico: "0", hielo: "0", lucha: "0", veneno: "0",
-    tierra: "0", volador: "0", psiquico: "0", bicho: "0", roca: "0", fantasma: "0", dragon: "+1", siniestro: "0", acero: "-1", hada: "0"
+    tierra: "0", volador: "0", psiquico: "0", bicho: "0", roca: "0", fantasma: "0", dragon: "+1", siniestro: "0", acero: "-1", hada: "-10"
   },
   fantasma: { // Cómo le afectan los ataques al tipo FANTASMA
-    normal: "0", fuego: "0", agua: "0", planta: "0", electrico: "0", hielo: "0", lucha: "0", veneno: "0",
+    normal: "-10", fuego: "0", agua: "0", planta: "0", electrico: "0", hielo: "0", lucha: "0", veneno: "0",
     tierra: "0", volador: "0", psiquico: "+1", bicho: "0", roca: "0", fantasma: "+1", dragon: "0", siniestro: "-1", acero: "0", hada: "0"
   },
   siniestro: { // Cómo le afectan los ataques al tipo SINIESTRO
@@ -114,12 +114,20 @@ function comparar(tipo1, tipo2) {
     x2: [],
     neutro: [],
     "0.5": [],
-    "0.25": []
+    "0.25": [],
+    inmune: [] // Agregado para inmunidades
   };
 
   tipos.forEach(tipoAtaque => {
     const valor1 = Number(efectividades[tipoAtaque][tipo1]);
     const valor2 = tipo2 ? Number(efectividades[tipoAtaque][tipo2]) : 0;
+
+    // Si alguno es menor que 5, es inmune
+    if (valor1 < 5 || valor2 < 5) {
+      resultado.inmune.push(tipoAtaque);
+      return;
+    }
+
     const mult1 = valorAMultiplicador(valor1);
     const mult2 = valorAMultiplicador(valor2);
     const total = mult1 * mult2;
