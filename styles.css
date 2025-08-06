@@ -1,4 +1,23 @@
+/* Agrega este código a tu CSS */
 
+.layout-container {
+    display: flex;            /* Activa Flexbox */
+    align-items: center;      /* Centra verticalmente los items */
+    gap: 2rem;                /* Crea un espacio entre las dos columnas */
+          /* Añade un margen inferior general */
+}
+
+.columna-izquierda {
+    flex: 2; /* Le da el doble de espacio que a la columna derecha */
+}
+#buscadorPokemon{
+    max-width: 100%;
+}
+.columna-derecha {
+    flex: 1; /* Ocupa el espacio restante */
+    display: flex;
+    justify-content: center; /* Centra la imagen horizontalmente en su columna */
+}
     .buscador-container {
         position: relative;
     }
@@ -34,7 +53,7 @@
     }
     .selector {
         display: flex;
-        justify-content: center;
+        
         gap: 16px;
         margin-bottom: 32px;
     }

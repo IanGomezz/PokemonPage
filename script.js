@@ -24,6 +24,14 @@
     function valorAMultiplicador(valor) {
         if (valor === 2) return 4; if (valor === 1) return 2; if (valor === 0) return 1; if (valor === -1) return 0.5; if (valor === -2) return 0.25; return 1;
     }
+    function limpiarDatos() {
+        document.getElementById('buscadorPokemon').value = '';
+        document.getElementById('sugerencias').innerHTML = '';
+        document.getElementById('stats-container').innerHTML = '';
+        document.getElementById('pokemon-imagen').style.display = 'none';
+        
+        
+    }
     function comparar(tipo1, tipo2) {
         const tipos = Object.keys(efectividades);
         const resultado = { x4: [], x2: [], neutro: [], "0.5": [], "0.25": [], inmune: [] };
@@ -104,6 +112,17 @@
             if (!respuesta.ok) throw new Error('Pokémon no encontrado');
             const data = await respuesta.json();
 
+
+// --- INICIO: CÓDIGO NUEVO PARA LA IMAGEN ---
+            const imgElement = document.getElementById('pokemon-imagen');
+        const imgUrl = data.sprites.other['official-artwork'].front_default;
+
+        if (imgUrl) {
+            imgElement.src = imgUrl; // Asigna la URL de la imagen
+            imgElement.style.display = 'block'; // Hace visible la imagen
+        } else {
+            imgElement.style.display = 'none'; // Oculta si no hay imagen
+        }
             // Lógica de tipos (original)
             const tiposPokemon = data.types.map(t => traduccionTipos[t.type.name]);
             const select1 = document.getElementById('tipo1');
@@ -182,6 +201,8 @@
                     </tfoot>
                 </table>
             `;
+
+            select2.disabled = false;
             // --- FIN: LÓGICA AÑADIDA ---
 
         } catch (error) {
