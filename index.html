@@ -4,100 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparador de Tipos Pokémon</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-    
-       body {
-    background-image: url(https://raw.githubusercontent.com/IanGomezz/PokemonPage/refs/heads/main/img/Pikachu%20god.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 70% center; /* 70% desde la izquierda, es decir, 30% de la derecha */
-    min-height: 100vh;
-}
-        .container-poke {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff, 20%;
-            padding: 32px 24px;
-            border-radius: 18px;
-            box-shadow: 0 4px 24px #0002;
-        }
-        h1 {
-            text-align: center;
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-weight: 700;
-            letter-spacing: 2px;
-            margin-bottom: 32px;
-            color: #1976d2;
-        }
-        .selector {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-        .tipo {
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 16px;
-            margin: 2px 4px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 1em;
-            box-shadow: 0 1px 4px #0001;
-        }
-        .normal { background: #A8A77A; }
-        .fuego { background: #EE8130; }
-        .agua { background: #6390F0; }
-        .planta { background: #7AC74C; }
-        .electrico { background: #F7D02C; color: #444; }
-        .hielo { background: #96D9D6; color: #444; }
-        .lucha { background: #C22E28; }
-        .veneno { background: #A33EA1; }
-        .tierra { background: #E2BF65; color: #444; }
-        .volador { background: #A98FF3; }
-        .psiquico { background: #F95587; }
-        .bicho { background: #A6B91A; }
-        .roca { background: #B6A136; }
-        .fantasma { background: #735797; }
-        .dragon { background: #6F35FC; }
-        .siniestro { background: #705746; }
-        .acero { background: #B7B7CE; color: #444; }
-        .hada { background: #D685AD; }
-        .x4 { color: #fff; background: #c00;  padding: 2px 8px; }
-        .x2 { color: #fff; background: #e67300;  padding: 2px 8px; }
-        .neutro { color: #444; background: #e0e0e0;  padding: 2px 8px; }
-        .x05 { color: #fff; background: #1976d2;  padding: 2px 8px; }
-        .x025 { color: #fff; background: #388e3c;  padding: 2px 8px; }
-        .inmune { color: #000; background: #eee; }
-        .table thead th {
-            background: #1976d2;
-            color: #fff;
-            font-size: 1.1em;
-        }
-        
-        .table tr td:first-child {
-            font-weight: bold;
-            width: 180px;
-            
-        }
-        .footer-note {
-            font-size: 0.95em;
-            color: #555;
-            margin-top: 16px;
-            text-align: center;
-        }
-        @media (max-width: 600px) {
-            .container-poke { padding: 12px 2px; }
-            .selector { flex-direction: column; gap: 8px; }
-        }
-        
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container-poke shadow-lg">
         <h1>Comparador de Tipos Pokémon</h1>
+        <div class="mb-3 buscador-container">
+            <label for="buscadorPokemon" class="form-label">Buscar Pokémon:</label>
+            <input type="text" id="buscadorPokemon" class="form-control" placeholder="Escribe el nombre de un Pokémon...">
+            <div id="sugerencias" class="list-group"></div>
+        </div>
         <div class="selector mb-4">
             <select id="tipo1" class="form-select w-auto">
                 <option value="">Selecciona tipo 1</option>
@@ -107,95 +24,12 @@
             </select>
             <button onclick="calcular()" class="btn btn-primary">Comparar</button>
         </div>
+        
         <div id="tabla"></div>
+        <div id="stats-container"></div>
     </div>
-    <!-- Bootstrap JS (opcional, solo si usas componentes interactivos de Bootstrap) -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
-    <script>
-        // Tipos Pokémon
-        const tipos = [
-            "normal", "fuego", "agua", "planta", "electrico", "hielo", "lucha", "veneno",
-            "tierra", "volador", "psiquico", "bicho", "roca", "fantasma", "dragon",
-            "siniestro", "acero", "hada"
-        ].sort();
-
-        // Rellenar selects
-        const select1 = document.getElementById('tipo1');
-        const select2 = document.getElementById('tipo2');
-
-        tipos.forEach(tipo => {
-            select1.innerHTML += `<option value="${tipo}">${tipo.charAt(0).toUpperCase() + tipo.slice(1)}</option>`;
-            select2.innerHTML += `<option value="${tipo}">${tipo.charAt(0).toUpperCase() + tipo.slice(1)}</option>`;
-        });
-
-        // Inicialmente deshabilitar el segundo select
-        select2.disabled = true;
-
-        // Habilitar el segundo select solo si hay selección en el primero
-        select1.addEventListener('change', function () {
-            if (this.value) {
-                select2.disabled = false;
-                // Ocultar la opción seleccionada en el primero para el segundo
-                Array.from(select2.options).forEach(opt => {
-                    opt.disabled = opt.value === this.value && opt.value !== "";
-                });
-                // Si el segundo select tiene el mismo valor, resetearlo
-                if (select2.value === this.value) select2.value = "";
-            } else {
-                select2.disabled = true;
-                select2.value = "";
-            }
-        });
-
-        // Validar que no se pueda seleccionar el mismo tipo en ambos selects
-        select2.addEventListener('change', function () {
-            if (this.value === select1.value && this.value !== "") {
-                alert("No puedes seleccionar el mismo tipo en ambos campos.");
-                this.value = "";
-            }
-        });
-
-        function crearChips(arr) {
-            if (!arr.length) return "Ninguno";
-            return arr.map(tipo => `<span class="tipo ${tipo}">${tipo.toUpperCase()}</span>`).join(" ");
-        }
-
-        function calcular() {
-            const tipo1 = select1.value;
-            const tipo2 = select2.value || undefined;
-            if (!tipo1) {
-                document.getElementById('tabla').innerHTML = "<div class='alert alert-warning'>Selecciona al menos un tipo.</div>";
-                return;
-            }
-            if (tipo1 === tipo2 && tipo2) {
-                document.getElementById('tabla').innerHTML = "<div class='alert alert-danger'>No puedes seleccionar el mismo tipo en ambos campos.</div>";
-                return;
-            }
-            const resultado = comparar(tipo1, tipo2);
-
-            document.getElementById('tabla').innerHTML = `
-            <table class="table table-bordered table-hover align-middle mt-4" id="tablaResultado">
-                <thead>
-                    <tr>
-                        <th>Daño recibido</th>
-                        <th>Tipos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td class="x4">x4 <span>Superdébil a:</span></td><td>${crearChips(resultado.x4)}</td></tr>
-                    <tr><td class="x2">x2 <span>Débil a:</span></td><td>${crearChips(resultado.x2)}</td></tr>
-                    <tr><td class="neutro">- <span>Daño normal:</span></td><td>${crearChips(resultado.neutro)}</td></tr>
-                    <tr><td class="x05">½ <span>Resistente a:</span></td><td>${crearChips(resultado["0.5"])}</td></tr>
-                    <tr><td class="x025">¼ <span>Superresistente a:</span></td><td>${crearChips(resultado["0.25"])}</td></tr>
-                    <tr><td class="inmune"><span>Inmune a:</span></td><td>${crearChips(resultado.inmune)}</td></tr>
-                </tbody>
-            </table>
-            <div class="footer-note">
-                Estas debilidades y resistencias corresponden a la última generación bajo condiciones normales de combate.
-            </div>
-            `;
-        }
-    </script>
 </body>
 </html>

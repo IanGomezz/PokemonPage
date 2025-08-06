@@ -1,0 +1,167 @@
+
+    .buscador-container {
+        position: relative;
+    }
+    #sugerencias {
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        z-index: 10;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    body {
+        background-image: url(https://raw.githubusercontent.com/IanGomezz/PokemonPage/refs/heads/main/img/Pikachu%20god.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+    }
+    .container-poke {
+        max-width: 1200px; /* Ancho ajustado para dos columnas */
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 32px 24px;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px #0002;
+    }
+    h1 {
+        text-align: center;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 32px;
+        color: #1976d2;
+    }
+    .selector {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+    .tipo {
+        display: inline-block;
+        padding: 4px 16px;
+        border-radius: 16px;
+        margin: 2px 4px;
+        color: #fff;
+        font-weight: bold;
+        font-size: 1em;
+        box-shadow: 0 1px 4px #0001;
+    }
+    
+    .normal { background: #A8A77A; }
+    .fuego { background: #EE8130; }
+    .agua { background: #6390F0; }
+    .planta { background: #7AC74C; }
+    .electrico { background: #F7D02C; color: #444; }
+    .hielo { background: #96D9D6; color: #444; }
+    .lucha { background: #C22E28; }
+    .veneno { background: #A33EA1; }
+    .tierra { background: #E2BF65; color: #444; }
+    .volador { background: #A98FF3; }
+    .psiquico { background: #F95587; }
+    .bicho { background: #A6B91A; }
+    .roca { background: #B6A136; }
+    .fantasma { background: #735797; }
+    .dragon { background: #6F35FC; }
+    .siniestro { background: #705746; }
+    .acero { background: #B7B7CE; color: #444; }
+    .hada { background: #D685AD; }
+    .x4 { color: #fff; background: #c00;  padding: 2px 8px; }
+    .x2 { color: #fff; background: #e67300;  padding: 2px 8px; }
+    .neutro { color: #444; background: #e0e0e0;  padding: 2px 8px; }
+    .x05 { color: #fff; background: #1976d2;  padding: 2px 8px; }
+    .x025 { color: #fff; background: #388e3c;  padding: 2px 8px; }
+    .inmune { color: #000; background: #eee; }
+    .table thead th {
+        background: #1976d2;
+        color: #fff;
+        font-size: 1.1em;
+    }
+    .table tr td:first-child {
+        font-weight: bold;
+        width: 180px;
+    }
+    .footer-note {
+        font-size: 0.95em;
+        color: #555;
+        margin-top: 16px;
+        text-align: center;
+    }
+
+    /* --- INICIO: ESTILOS PARA TABLA DE ESTADÍSTICAS --- */
+    #stats-table {
+    width: 50%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #f6f6f6;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px #0002;
+    font-size: 0.9em;
+    
+    /* Por esta, para mantener el margen superior y centrarla */
+    margin: 1rem auto; 
+}
+    #stats-table th, #stats-table td {
+        padding: 8px 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    #stats-table thead th {
+        background-color: #333;
+        color: white;
+        font-weight: bold;
+        border-bottom: 2px solid #555;
+    }
+    #stats-table thead tr:last-child td {
+        background-color: #555;
+        color: white;
+        font-size: 0.85em;
+        padding: 4px;
+    }
+    #stats-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    #stats-table tfoot td {
+        background-color: #333;
+        color: white;
+        font-weight: bold;
+    }
+    #stats-table .stat-name {
+        text-align: left;
+        font-weight: bold;
+    }
+    .stat-bar-container {
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        height: 10px;
+        width: 100px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .stat-bar {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease-in-out;
+    }
+    .stat-bar.low { background-color: #f34444; }
+    .stat-bar.medium { background-color: #ff7f0f; }
+    .stat-bar.good { background-color: #ffdd57; }
+    .stat-bar.high { background-color: #a0e515; }
+    .stat-bar.excellent { background-color: #23cd5e; }
+    /* --- FIN: ESTILOS PARA TABLA DE ESTADÍSTICAS --- */
+
+    @media (max-width: 992px) {
+        .container-poke { max-width: 95%; }
+    }
+    @media (max-width: 768px) {
+        .row { flex-direction: column; }
+        .col-md-6 { width: 100%; margin-bottom: 1rem; }
+    }
+    @media (max-width: 600px) {
+        .container-poke { padding: 12px 2px; }
+        .selector { flex-direction: column; gap: 8px; }
+    }
+    
+    
