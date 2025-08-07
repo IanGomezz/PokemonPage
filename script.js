@@ -276,4 +276,193 @@
             </div>
             `;
     }
-  
+  function cambiarTab(evt, nombrePanel) {
+    // Ocultar todos los paneles de contenido
+    const paneles = document.querySelectorAll(".tab-panel");
+    paneles.forEach(panel => {
+        panel.style.display = "none";
+        panel.classList.remove("active");
+    });
+
+    // Quitar la clase 'active' de todos los botones
+    const botones = document.querySelectorAll(".tab-button");
+    botones.forEach(boton => {
+        boton.classList.remove("active");
+    });
+
+    // Mostrar el panel seleccionado y marcar su botón como activo
+    document.getElementById(nombrePanel).style.display = "block";
+    evt.currentTarget.classList.add("active");
+}
+// --- LÓGICA DEL BUSCADOR DE MOVIMIENTOS ---
+
+// Variables globales para el nuevo buscador
+let listaTodosLosMovimientos = [];
+const inputBuscadorMovimiento = document.getElementById('inputBuscadorMovimiento');
+const sugerenciasMovimientos = document.getElementById('sugerenciasMovimientos');
+const resultadoMovimiento = document.getElementById('resultado-movimiento');
+
+/**
+ * Carga la lista completa de movimientos desde la API.
+ */
+// Reemplaza tu función cargarListaMovimientos con esta
+async function cargarListaMovimientos() {
+    // Intentar cargar la lista desde el almacenamiento local primero
+    const movimientosGuardados = localStorage.getItem('listaMovimientosTraducida');
+    if (movimientosGuardados) {
+        listaTodosLosMovimientos = JSON.parse(movimientosGuardados);
+        console.log("Lista de movimientos cargada desde localStorage.");
+        return;
+    }
+
+    // Si no está guardada, la generamos desde la API (esto solo pasa la primera vez)
+    try {
+        console.log("Generando lista de movimientos desde la API... (puede tardar un momento)");
+        const respuestaInicial = await fetch('https://pokeapi.co/api/v2/move?limit=950'); // Límite ajustado
+        if (!respuestaInicial.ok) throw new Error('No se pudo cargar la lista inicial de movimientos');
+        
+        const dataInicial = await respuestaInicial.json();
+
+        // Creamos un array de promesas para buscar los detalles de cada movimiento
+        const promesasDetalles = dataInicial.results.map(movimiento => fetch(movimiento.url).then(res => res.json()));
+
+        // Ejecutamos todas las promesas en paralelo para más velocidad
+        const detallesCompletos = await Promise.all(promesasDetalles);
+
+        // Mapeamos los resultados para obtener solo lo que necesitamos
+        listaTodosLosMovimientos = detallesCompletos.map(data => {
+            const nombreES = data.names.find(n => n.language.name === 'es')?.name || data.name;
+            return {
+                nombreOriginal: data.name, // ej: "flamethrower" (para la API)
+                nombreBusqueda: nombreES.toLowerCase() // ej: "lanzallamas" (para buscar)
+            };
+        });
+
+        // Guardamos la lista generada en localStorage para la próxima vez
+        localStorage.setItem('listaMovimientosTraducida', JSON.stringify(listaTodosLosMovimientos));
+        console.log("Lista de movimientos generada y guardada.");
+
+    } catch (error) {
+        console.error("Error al generar la lista de movimientos:", error);
+    }
+}
+
+/**
+ * Listener para el input de búsqueda de movimientos.
+ 
+// Reemplaza tu listener de input de movimientos con este*/
+inputBuscadorMovimiento.addEventListener('input', () => {
+    const textoBusqueda = inputBuscadorMovimiento.value.toLowerCase();
+    sugerenciasMovimientos.innerHTML = '';
+    if (textoBusqueda.length < 2) return;
+
+    // Ahora filtramos por el nombre en español (nombreBusqueda)
+    const movimientosFiltrados = listaTodosLosMovimientos.filter(m => m.nombreBusqueda.includes(textoBusqueda));
+
+    movimientosFiltrados.slice(0, 5).forEach(movimiento => {
+        const sugerenciaItem = document.createElement('button');
+        sugerenciaItem.type = 'button';
+        sugerenciaItem.classList.add('list-group-item', 'list-group-item-action');
+        sugerenciaItem.textContent = movimiento.nombreBusqueda.charAt(0).toUpperCase() + movimiento.nombreBusqueda.slice(1);
+        
+        // Al hacer clic, pasamos el nombre original en inglés para la llamada a la API
+        sugerenciaItem.addEventListener('click', () => seleccionarMovimiento(movimiento.nombreOriginal));
+        sugerenciasMovimientos.appendChild(sugerenciaItem);
+    });
+});
+const imagenesClaseDano = {
+    // Asegúrate de que estas claves coincidan exactamente con lo que genera tu objeto `traduccionClaseDano`
+    'Físico': './img/Clase_fisico.gif',    // Ejemplo con .svg
+    'Especial': './img/Clase_especial.gif',
+    'Estado': './img/Clase_estado.gif'
+    // Puedes agregar 'Otro' si tienes una imagen para esa categoría
+};
+
+// Objeto de ejemplo para que la función sea autoejecutable (ya lo debes tener)
+const traduccionClaseDano = {
+    'physical': 'Físico',
+    'special': 'Especial',
+    'status': 'Estado'
+};
+
+/**
+ * Busca y muestra los detalles de un movimiento seleccionado.
+ * @param {string} nombreMovimiento - El nombre del movimiento a buscar.
+ */
+// Reemplaza tu función seleccionarMovimiento con esta
+async function seleccionarMovimiento(nombreMovimiento) {
+    try {
+        inputBuscadorMovimiento.value = '';
+        sugerenciasMovimientos.innerHTML = '';
+        resultadoMovimiento.innerHTML = `<div class="text-center">Cargando datos del movimiento...</div>`;
+
+        const respuesta = await fetch(`https://pokeapi.co/api/v2/move/${nombreMovimiento}`);
+        if (!respuesta.ok) throw new Error('Movimiento no encontrado');
+        const data = await respuesta.json();
+
+        // --- EXTRACCIÓN DE DATOS ---
+        const nombreEnEspanol = data.names.find(n => n.language.name === 'es').name;
+        const tipoMovimiento = traduccionTipos[data.type.name];
+        const claseDano = traduccionClaseDano[data.damage_class.name] || 'Otro';
+        const prioridad = data.priority;
+        const probEfecto = data.effect_chance;
+
+        const descripcion = 
+            (data.flavor_text_entries.find(e => e.language.name === 'es' && e.version_group.name === 'scarlet-violet')?.flavor_text) ||
+            (data.flavor_text_entries.find(e => e.language.name === 'es')?.flavor_text) ||
+            (data.flavor_text_entries.find(e => e.language.name === 'en' && e.version_group.name === 'scarlet-violet')?.flavor_text) ||
+            (data.flavor_text_entries.find(e => e.language.name === 'en')?.flavor_text) ||
+            'Descripción no disponible.';
+
+        // --- LÓGICA DE IMAGEN AGREGADA ---
+        // 1. Busca la ruta de la imagen en nuestro mapa
+        const rutaImagen = imagenesClaseDano[claseDano];
+        
+        // 2. Genera el HTML de la imagen SOLO si se encontró una ruta
+        const imagenHtml = rutaImagen 
+            ? `<img src="${rutaImagen}" alt="${claseDano}" class="clase-dano-icono">` 
+            : '';
+
+        // --- CONSTRUCCIÓN DEL HTML (Línea de clase de daño actualizada) ---
+        resultadoMovimiento.innerHTML = `
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">${nombreEnEspanol}</h4>
+                        <span class="tipo ${tipoMovimiento}">${tipoMovimiento.toUpperCase()}</span>
+                    </div>
+                    <div class="text-muted small mt-1 d-flex align-items-center">
+                        ${imagenHtml}
+                        <span>${claseDano}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">${descripcion}</p>
+                    <hr>
+                    <ul class="move-stats-list list-unstyled">
+                        <li class="stat-item"><i class="bi bi-stars"></i><span>Potencia: <span class="stat-value">${data.power || '—'}</span></span></li>
+                        <li class="stat-item"><i class="bi bi-bullseye"></i><span>Precisión: <span class="stat-value">${data.accuracy || '—'}%</span></span></li>
+                        <li class="stat-item"><i class="bi bi-lightning-charge-fill"></i><span>PP: <span class="stat-value">${data.pp}</span></span></li>
+                        <li class="stat-item"><i class="bi bi-fast-forward-fill"></i><span>Prioridad: <span class="stat-value">${prioridad > 0 ? '+' + prioridad : prioridad}</span></span></li>
+                        ${probEfecto ? `<li class="stat-item"><i class="bi bi-gem"></i><span>Prob. Efecto: <span class="stat-value">${probEfecto}%</span></span></li>` : ''}
+                    </ul>
+                    
+                    <div class="pokemon-learn-container">
+                        <h6 class="mb-2">Pokémon que pueden aprenderlo:</h6>
+                        <div class="pokemon-learn-list">
+                            ${(data.learned_by_pokemon && data.learned_by_pokemon.length > 0) ? data.learned_by_pokemon.map(p => `<span class="pokemon-chip">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</span>`).join('') : '<span>Ninguno</span>'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error("Error al seleccionar el movimiento:", error);
+        resultadoMovimiento.innerHTML = `<div class='alert alert-danger'>No se pudo cargar la información del movimiento.</div>`;
+    }
+}
+// Modificá tu listener DOMContentLoaded existente
+document.addEventListener('DOMContentLoaded', () => {
+    cargarListaPokemon();
+    cargarListaMovimientos(); // <-- AÑADIR ESTA LÍNEA
+});
